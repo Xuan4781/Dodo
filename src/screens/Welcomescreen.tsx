@@ -8,8 +8,16 @@ import {
 } from 'react-native';
 
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { RootStackParamList } from '../types/navigation';
 
-export default function WelcomeScreen() {
+type Props = NativeStackScreenProps<
+    RootStackParamList,
+    "Welcome"    
+>;
+
+
+export default function WelcomeScreen({ navigation }: Props) {
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="light-content"/>
@@ -27,7 +35,10 @@ export default function WelcomeScreen() {
         </View>
 
         <View style={styles.bottomArea}>
-          <TouchableOpacity style={styles.button}>
+          <TouchableOpacity 
+            style={styles.button}
+            onPress={() => navigation.navigate("SleepSetup")}
+          >
             <Text style={styles.buttonText}>Get Started</Text>
           </TouchableOpacity>
 
