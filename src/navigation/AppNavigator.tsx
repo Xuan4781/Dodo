@@ -4,7 +4,9 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import WelcomeScreen from "../screens/Welcomescreen";
 import SleepSetupScreen from "../screens/SleepSetupScreen";
 import GoalSetupScreen from "../screens/GoalSetupScreen";
+import HowItWorksScreen from "../screens/HowItWorksScreen";
 import { RootStackParamList } from "../types/navigation";
+
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
@@ -30,6 +32,11 @@ export default function AppNavigator() {
                 <Stack.Screen
                     name="GoalSetup"
                     component={GoalSetupScreen}
+                ></Stack.Screen>
+
+                <Stack.Screen
+                    name="HowItWorks"
+                    component={HowItWorksScreen}
                 ></Stack.Screen>
 
             </Stack.Navigator>
