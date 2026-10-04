@@ -20,11 +20,16 @@ import {
 
 import {
   formatSleepDuration,
+  formatTime,
   qualifiesForSleepGoal,
 } from "../utils/sleepQualification";
 
 export default function SleepScreen() {
-  const { sleepGoal } = useOnboarding();
+  const {
+    bedtime,
+    wakeTime,
+    sleepGoal,
+  } = useOnboarding();
 
   return (
     <SafeAreaView style={styles.container}>
@@ -52,9 +57,23 @@ export default function SleepScreen() {
           </Text>
 
           <Text style={styles.goalDescription}>
-            Sleep at least {sleepGoal} hours for
-            the night to qualify.
-          </Text>
+            Target:{" "}
+            {formatTime(
+                bedtime.getHours(),
+                bedtime.getMinutes()
+            )}
+            {" → "}
+            {formatTime(
+                wakeTime.getHours(),
+                wakeTime.getMinutes()
+            )}
+            </Text>
+
+            <Text style={styles.goalDescription}>
+            Stay within 30 minutes of your bedtime
+            and wake time, and sleep at least{" "}
+            {sleepGoal} hours.
+            </Text>
         </View>
 
         <Text style={styles.sectionLabel}>
@@ -64,8 +83,10 @@ export default function SleepScreen() {
         {sleepRecords.map((record) => {
           const qualified =
             qualifiesForSleepGoal(
-              record.durationMinutes,
-              sleepGoal
+                record,
+                bedtime,
+                wakeTime,
+                sleepGoal
             );
 
           return (
@@ -85,8 +106,15 @@ export default function SleepScreen() {
                 </Text>
 
                 <Text style={styles.timeRange}>
-                  {record.bedtime} →{" "}
-                  {record.wakeTime}
+                    {formatTime(
+                        record.bedtimeHour,
+                        record.bedtimeMinute
+                    )}
+                    {" → "}
+                    {formatTime(
+                        record.wakeHour,
+                        record.wakeMinute
+                    )}
                 </Text>
               </View>
 

@@ -1,7 +1,12 @@
 export type SleepRecord = {
   id: number;
   date: string;
-  bedtime: string;
-  wakeTime: string;
+
+  bedtimeHour: number;
+  bedtimeMinute: number;
+
+  wakeHour: number;
+  wakeMinute: number;
+
   durationMinutes: number;
 };
