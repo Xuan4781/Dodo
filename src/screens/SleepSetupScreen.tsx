@@ -13,20 +13,22 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../types/navigation';
 
+import { useOnboarding } from "../context/OnboardingContext";
+
 type Props = NativeStackScreenProps<
     RootStackParamList,
     "SleepSetup"
 >;
 
 export default function SleepSetupScreen({navigation,} : Props){
-    const [bedtime, setBedtime] = useState(
-        new Date(2026, 0, 1, 23, 30)
-    );
-
-    const [wakeTime, setWakeTime] = useState(
-        new Date(2026, 0, 1, 7, 30)
-    );
-
+    
+    const {
+        bedtime,
+        wakeTime,
+        setBedtime,
+        setWakeTime,
+    } = useOnboarding();
+    
     const [showBedtimePicker, setShowBedtimePicker] = useState(false);
     const [showWakePicker, setShowWakePicker] = useState(false);
 

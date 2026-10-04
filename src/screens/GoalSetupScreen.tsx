@@ -1,5 +1,3 @@
-import { useState } from "react";
-
 import { 
   StatusBar,
   StyleSheet,
@@ -13,14 +11,21 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../types/navigation';
 
+import { useOnboarding } from "../context/OnboardingContext";
+
 type Props = NativeStackScreenProps<
     RootStackParamList,
     "GoalSetup"
 >;
 
 export default function GoalSetupScreen({navigation,} : Props) {
-    const [sleepGoal, setSleepGoal] = useState(8);
-    const [nightsPerWeek, setNightsPerWeek] = useState(5);
+
+    const {
+        sleepGoal,
+        nightsPerWeek,
+        setSleepGoal,
+        setNightsPerWeek,
+    } = useOnboarding(); 
 
     return (
         <SafeAreaView style={styles.container}>

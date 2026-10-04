@@ -10,9 +10,17 @@ import {
 } from 'react-native';
 
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useOnboarding } from "../context/OnboardingContext";
 
 
 export default function HowItWorksScreen() {
+
+    const {
+        bedtime,
+        wakeTime,
+        sleepGoal,
+        nightsPerWeek,
+    } = useOnboarding();
 
     return (
         <SafeAreaView style={styles.container}>
@@ -28,6 +36,10 @@ export default function HowItWorksScreen() {
 
                     <Text style={styles.description}>
                         Build dodo habits and compete challenges.
+                    </Text>
+
+                    <Text style={{color: "white", marginBottom: 25}}>
+                        Goal: {sleepGoal}h * {nightsPerWeek} nights/week
                     </Text>
 
                     <View style={styles.rule}>
