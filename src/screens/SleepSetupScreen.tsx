@@ -1,3 +1,4 @@
+import {useState} from "react";
 import { 
   StatusBar,
   StyleSheet,
@@ -7,9 +8,27 @@ import {
   View, 
 } from 'react-native';
 
+import DateTimePicker from "@react-native-community/datetimepicker"
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function SleepSetupScreen(){
+    const [bedtime, setBedtime] = useState(
+        new Date(2026, 0, 1, 23, 30)
+    );
+
+    const [wakeTime, setWakeTime] = useState(
+        new Date(2026, 0, 1, 7, 30)
+    );
+
+    const [showBedtimePicker, setShowBedtimePicker] = useState(false);
+    const [showWakePicker, setShowWakePicker] = useState(false);
+
+    function formatTime(date: Date){
+        return date.toLocaleDateString([], {
+            hour: "numeric",
+            minute: "2-digit",
+        });
+    }
     return (
         <SafeAreaView style={styles.container}>
             <StatusBar barStyle="light-content" />
@@ -26,6 +45,33 @@ export default function SleepSetupScreen(){
                         Dodo uses your normal sleep schedule to create goals that work for you duh.
                     </Text>
 
+                    <TouchableOpacity
+                        style = {styles.card}
+                        onPress={() => setShowBedtimePicker(true)}
+                    >
+                        <Text style={styles.label}>Typical Bedtime</Text>
+                        <Text style={styles.time}>
+                            {formatTime(bedtime)}
+                        </Text>
+                    </TouchableOpacity>
+
+                    <TouchableOpacity
+                        style={styles.card}
+                        onPress={() => setShowWakePicker(true)}
+                    >
+                        <Text style={styles.label}>Typical wake time</Text>
+                        <Text style={styles.time}>
+                            {formatTime(wakeTime)}
+                        </Text>
+                    </TouchableOpacity>
+
+                    <View style={styles.card}>
+                        <Text style={styles.label}>Sleep Goal</Text>
+                        <Text style={styles.time}>8 Hours</Text>
+                    </View>
+
+
+                    {/*
                     <View style={styles.card}>
                         <Text style={styles.label}>Typical bedtime</Text>
                         <Text style={styles.time}>11:30 PM</Text>
@@ -41,11 +87,40 @@ export default function SleepSetupScreen(){
                         <Text style={styles.time}>8 Hours</Text>
                     </View>
 
-                    <TouchableOpacity style={styles.button}>
-                        <Text style={styles.buttonText}>Continue</Text>
-                    </TouchableOpacity>
-            
+                    */}
+
+                    {showBedtimePicker && (
+                        <DateTimePicker
+                            value={bedtime}
+                            mode="time"
+                            onChange={(event, selectedTime) => {
+                                setShowBedtimePicker(false);
+
+                                if(selectedTime){
+                                    setBedtime(selectedTime);
+                                }
+                            }}
+                        />
+                    )}
+
+                    {showWakePicker && (
+                        <DateTimePicker
+                            value={wakeTime}
+                            mode="time"
+                            onChange={(event, selectedTime) => {
+                                setShowWakePicker(false);
+
+                                if (selectedTime){
+                                    setWakeTime(selectedTime);
+                                }
+                            }}
+                        />
+                    )}
                 </View>
+                <TouchableOpacity style={styles.button}>
+                    <Text style={styles.buttonText}>Continue</Text>
+                </TouchableOpacity>
+
             </View>
         </SafeAreaView>
     )
@@ -89,7 +164,7 @@ const styles = StyleSheet.create({
     },
 
     card: {
-        backgroundColor: "181D35",
+        backgroundColor: "#181D35",
         borderRadius: 18,
         padding: 20,
         marginBottom: 14,
@@ -102,7 +177,7 @@ const styles = StyleSheet.create({
     },
 
     time: {
-        color: "FFFFFF",
+        color: "#FFFFFF",
         fontSize: 21,
         fontWeight: "600",
     },
@@ -117,7 +192,7 @@ const styles = StyleSheet.create({
    },
 
     buttonText: {
-        color: "101426",
+        color: "#101426",
         fontSize: 17,
         fontWeight: "700",
     }
