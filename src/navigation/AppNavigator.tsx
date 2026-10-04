@@ -5,6 +5,7 @@ import WelcomeScreen from "../screens/Welcomescreen";
 import SleepSetupScreen from "../screens/SleepSetupScreen";
 import GoalSetupScreen from "../screens/GoalSetupScreen";
 import HowItWorksScreen from "../screens/HowItWorksScreen";
+import MainTabNavigator from "./MainTabNavigator";
 import { RootStackParamList } from "../types/navigation";
 
 
@@ -37,6 +38,11 @@ export default function AppNavigator() {
                 <Stack.Screen
                     name="HowItWorks"
                     component={HowItWorksScreen}
+                ></Stack.Screen>
+
+                <Stack.Screen
+                    name="Main"
+                    component={MainTabNavigator}
                 ></Stack.Screen>
 
             </Stack.Navigator>

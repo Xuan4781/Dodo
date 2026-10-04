@@ -3,5 +3,12 @@ export type RootStackParamList = {
     SleepSetup: undefined;
     GoalSetup: undefined;
     HowItWorks: undefined;
-    Home: undefined;
+    Main: undefined;
 };
+
+export type MainTabParamList = {
+    Home: undefined;
+    Challenges: undefined;
+    Sleep: undefined;
+    Profile: undefined;
+}

@@ -11,10 +11,15 @@ import {
 
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useOnboarding } from "../context/OnboardingContext";
+import { NativeStackScreenProps } from "@react-navigation/native-stack";
+import { RootStackParamList } from "../types/navigation";
 
+type Props = NativeStackScreenProps<
+        RootStackParamList,
+        "HowItWorks"
+    >;
 
-export default function HowItWorksScreen() {
-
+export default function HowItWorksScreen({navigation,}: Props) {
     const {
         bedtime,
         wakeTime,
@@ -107,7 +112,10 @@ export default function HowItWorksScreen() {
                     </View>
                 </View>
                     
-                <TouchableOpacity style={styles.button}>
+                <TouchableOpacity
+                    style={styles.button}
+                    onPress={() => navigation.replace("Main")}
+                >
                     <Text style={styles.buttonText}>
                         Start Dodo
                     </Text>
