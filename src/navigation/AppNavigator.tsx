@@ -6,6 +6,7 @@ import SleepSetupScreen from "../screens/SleepSetupScreen";
 import GoalSetupScreen from "../screens/GoalSetupScreen";
 import HowItWorksScreen from "../screens/HowItWorksScreen";
 import MainTabNavigator from "./MainTabNavigator";
+import ChallengeDetailsScreen from "../screens/ChallengeDetailsScreen";
 import { RootStackParamList } from "../types/navigation";
 
 
@@ -43,6 +44,11 @@ export default function AppNavigator() {
                 <Stack.Screen
                     name="Main"
                     component={MainTabNavigator}
+                ></Stack.Screen>
+
+                <Stack.Screen
+                    name="ChallengeDetails"
+                    component={ChallengeDetailsScreen}
                 ></Stack.Screen>
 
             </Stack.Navigator>

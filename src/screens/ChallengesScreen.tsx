@@ -10,7 +10,16 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import { challenges } from "../data/challenges";
 
+import { useNavigation } from "@react-navigation/native";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { RootStackParamList } from "../types/navigation";
+
+type NavigationProp =
+  NativeStackNavigationProp<RootStackParamList>;
+
 export default function ChallengesScreen() {
+
+  const navigation = useNavigation<NavigationProp>();
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="light-content" />
@@ -33,6 +42,11 @@ export default function ChallengesScreen() {
           <TouchableOpacity
             key={challenge.id}
             style={styles.card}
+            onPress={() => {
+                navigation.navigate("ChallengeDetails", {
+                    challengeId: challenge.id,
+                })
+            }}
           >
             <View style={styles.cardTop}>
               <View style={styles.nameArea}>

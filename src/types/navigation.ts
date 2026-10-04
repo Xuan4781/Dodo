@@ -4,6 +4,10 @@ export type RootStackParamList = {
     GoalSetup: undefined;
     HowItWorks: undefined;
     Main: undefined;
+
+    ChallengeDetails: {
+        challengeId: number;
+    };
 };
 
 export type MainTabParamList = {
