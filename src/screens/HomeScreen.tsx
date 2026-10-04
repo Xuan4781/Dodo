@@ -8,12 +8,19 @@ import {
 
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useOnboarding } from "../context/OnboardingContext";
+import { useDodo } from "../context/DodoContext";
 
 export default function HomeScreen() {
   const {
     sleepGoal,
     nightsPerWeek,
   } = useOnboarding();
+
+  const {
+    sleepCoins,
+    activeChallenge,
+    completedNights,
+  } = useDodo();
 
   return (
     <SafeAreaView style={styles.container}>
@@ -36,7 +43,10 @@ export default function HomeScreen() {
 
           <View style={styles.coinBox}>
             <Text style={styles.coin}>◐</Text>
-            <Text style={styles.coinAmount}>1,000</Text>
+
+            <Text style={styles.coinAmount}>
+              {sleepCoins.toLocaleString()}
+            </Text>
           </View>
         </View>
 
@@ -44,105 +54,123 @@ export default function HomeScreen() {
           ACTIVE CHALLENGE
         </Text>
 
-        <View style={styles.challengeCard}>
-          <View style={styles.challengeTop}>
-            <View>
-              <Text style={styles.challengeName}>
-                Consistency Club
+        {activeChallenge ? (
+          <View style={styles.challengeCard}>
+            <View style={styles.challengeTop}>
+              <View>
+                <Text style={styles.challengeName}>
+                  {activeChallenge.name}
+                </Text>
+
+                <Text style={styles.week}>
+                  Week 1 of {activeChallenge.weeks}
+                </Text>
+              </View>
+
+              <View style={styles.activeBadge}>
+                <Text style={styles.activeText}>
+                  ACTIVE
+                </Text>
+              </View>
+            </View>
+
+            <View style={styles.progressArea}>
+              <Text style={styles.progressNumber}>
+                {completedNights}
+
+                <Text style={styles.progressGoal}>
+                  {" "}/ {activeChallenge.nightsRequired}
+                </Text>
               </Text>
 
-              <Text style={styles.week}>
-                Week 1 of 4
+              <Text style={styles.progressLabel}>
+                qualifying nights
               </Text>
             </View>
 
-            <View style={styles.activeBadge}>
-              <Text style={styles.activeText}>
-                ACTIVE
-              </Text>
-            </View>
-          </View>
-
-          <View style={styles.progressArea}>
-            <Text style={styles.progressNumber}>
-              3
-              <Text style={styles.progressGoal}>
-                {" "}/ {nightsPerWeek}
-              </Text>
-            </Text>
-
-            <Text style={styles.progressLabel}>
-              qualifying nights
-            </Text>
-          </View>
-
-          <View style={styles.days}>
-            {["M", "T", "W", "T", "F", "S", "S"].map(
-              (day, index) => (
-                <View
-                  style={styles.day}
-                  key={index}
-                >
+            <View style={styles.days}>
+              {["M", "T", "W", "T", "F", "S", "S"].map(
+                (day, index) => (
                   <View
-                    style={[
-                      styles.dayCircle,
-                      index < 3 &&
-                        styles.completedDay,
-                    ]}
+                    style={styles.day}
+                    key={index}
                   >
-                    <Text
+                    <View
                       style={[
-                        styles.dayCheck,
-                        index < 3 &&
-                          styles.completedDayText,
+                        styles.dayCircle,
+                        index < completedNights &&
+                          styles.completedDay,
                       ]}
                     >
-                      {index < 3 ? "✓" : ""}
+                      <Text
+                        style={[
+                          styles.dayCheck,
+                          index < completedNights &&
+                            styles.completedDayText,
+                        ]}
+                      >
+                        {index < completedNights
+                          ? "✓"
+                          : ""}
+                      </Text>
+                    </View>
+
+                    <Text style={styles.dayLabel}>
+                      {day}
                     </Text>
                   </View>
+                )
+              )}
+            </View>
 
-                  <Text style={styles.dayLabel}>
-                    {day}
-                  </Text>
-                </View>
-              )
-            )}
+            <View style={styles.divider} />
+
+            <View style={styles.challengeStats}>
+              <View>
+                <Text style={styles.statLabel}>
+                  POT
+                </Text>
+
+                <Text style={styles.statValue}>
+                  {(
+                    activeChallenge.pot +
+                    activeChallenge.entryFee
+                  ).toLocaleString()}
+                </Text>
+              </View>
+
+              <View>
+                <Text style={styles.statLabel}>
+                  PLAYERS
+                </Text>
+
+                <Text style={styles.statValue}>
+                  {activeChallenge.players + 1}
+                </Text>
+              </View>
+
+              <View>
+                <Text style={styles.statLabel}>
+                  YOUR ENTRY
+                </Text>
+
+                <Text style={styles.statValue}>
+                  {activeChallenge.entryFee}
+                </Text>
+              </View>
+            </View>
           </View>
+        ) : (
+          <View style={styles.emptyChallenge}>
+            <Text style={styles.emptyTitle}>
+              No active challenge
+            </Text>
 
-          <View style={styles.divider} />
-
-          <View style={styles.challengeStats}>
-            <View>
-              <Text style={styles.statLabel}>
-                POT
-              </Text>
-
-              <Text style={styles.statValue}>
-                24,500
-              </Text>
-            </View>
-
-            <View>
-              <Text style={styles.statLabel}>
-                PLAYERS
-              </Text>
-
-              <Text style={styles.statValue}>
-                49
-              </Text>
-            </View>
-
-            <View>
-              <Text style={styles.statLabel}>
-                YOUR ENTRY
-              </Text>
-
-              <Text style={styles.statValue}>
-                500
-              </Text>
-            </View>
+            <Text style={styles.emptyText}>
+              Visit Challenges to join your first Dodo challenge.
+            </Text>
           </View>
-        </View>
+        )}
 
         <Text style={styles.sectionLabel}>
           LAST NIGHT
@@ -362,6 +390,26 @@ const styles = StyleSheet.create({
     color: "#FFFFFF",
     fontSize: 15,
     fontWeight: "600",
+  },
+
+  emptyChallenge: {
+    backgroundColor: "#181D35",
+    borderRadius: 20,
+    padding: 24,
+    marginBottom: 30,
+  },
+
+  emptyTitle: {
+    color: "#FFFFFF",
+    fontSize: 19,
+    fontWeight: "700",
+  },
+
+  emptyText: {
+    color: "#858DAA",
+    fontSize: 14,
+    lineHeight: 21,
+    marginTop: 7,
   },
 
   sleepCard: {

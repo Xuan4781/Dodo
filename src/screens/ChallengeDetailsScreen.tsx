@@ -1,4 +1,5 @@
 import {
+  Alert,
   ScrollView,
   StatusBar,
   StyleSheet,
@@ -12,6 +13,7 @@ import { NativeStackScreenProps } from "@react-navigation/native-stack";
 
 import { RootStackParamList } from "../types/navigation";
 import { challenges } from "../data/challenges";
+import { useDodo } from "../context/DodoContext";
 
 type Props = NativeStackScreenProps<
   RootStackParamList,
@@ -28,6 +30,12 @@ export default function ChallengeDetailsScreen({
     (item) => item.id === challengeId
   );
 
+  const {
+    sleepCoins,
+    activeChallenge,
+    joinChallenge,
+  } = useDodo();
+
   if (!challenge) {
     return (
       <SafeAreaView style={styles.container}>
@@ -37,6 +45,47 @@ export default function ChallengeDetailsScreen({
       </SafeAreaView>
     );
   }
+
+  function handleJoin() {
+    if (!challenge) {
+        return;
+    }
+
+    if (activeChallenge) {
+        Alert.alert(
+            "Challenge already active",
+            "Finish your current challenge before joining another one."
+        );
+
+        return;
+    }
+
+    if (sleepCoins < challenge.entryFee) {
+        Alert.alert(
+            "Not enough SleepCoins",
+            "You don't have enough SleepCoins to join this challenge."
+        );
+
+        return;
+    }
+
+    const joined = joinChallenge(challenge);
+
+    if (joined) {
+        Alert.alert(
+            "Challenge joined!",
+            `You joined ${challenge.name}.`,
+            [
+                {
+                text: "Go to Home",
+                onPress: () =>
+                    navigation.navigate("Main"),
+                },
+            ]
+        );
+    }
+}
+  
 
   return (
     <SafeAreaView style={styles.container}>
@@ -187,9 +236,22 @@ export default function ChallengeDetailsScreen({
             </Text>
           </View>
 
-          <TouchableOpacity style={styles.joinButton}>
+          <View style={styles.balance}>
+            <Text style={styles.balanceLabel}>
+                YOUR BALANCE
+            </Text>
+
+            <Text style={styles.balanceValue}>
+                {sleepCoins.toLocaleString()} SleepCoins
+            </Text>
+          </View>
+
+          <TouchableOpacity 
+            style={styles.joinButton}
+            onPress={handleJoin}
+          >
             <Text style={styles.joinButtonText}>
-              Join Challenge
+              Join for {challenge.entryFee} SleepCoins
             </Text>
           </TouchableOpacity>
         </View>
@@ -381,4 +443,23 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "700",
   },
+
+  balance: {
+  flexDirection: "row",
+  justifyContent: "space-between",
+  alignItems: "center",
+  marginTop: 15,
+},
+
+balanceLabel: {
+  color: "#666F8D",
+  fontSize: 11,
+  fontWeight: "700",
+},
+
+balanceValue: {
+  color: "#FFFFFF",
+  fontSize: 14,
+  fontWeight: "600",
+},
 });
