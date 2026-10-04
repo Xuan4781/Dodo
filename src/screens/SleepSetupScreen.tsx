@@ -10,8 +10,15 @@ import {
 
 import DateTimePicker from "@react-native-community/datetimepicker"
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { RootStackParamList } from '../types/navigation';
 
-export default function SleepSetupScreen(){
+type Props = NativeStackScreenProps<
+    RootStackParamList,
+    "SleepSetup"
+>;
+
+export default function SleepSetupScreen({navigation,} : Props){
     const [bedtime, setBedtime] = useState(
         new Date(2026, 0, 1, 23, 30)
     );
@@ -28,6 +35,28 @@ export default function SleepSetupScreen(){
             hour: "numeric",
             minute: "2-digit",
         });
+    }
+
+    function calculateSleepWindow() {
+        const bedtimeMinutes =
+            bedtime.getHours() * 60 + bedtime.getMinutes();
+        const wakeMinutes = 
+            wakeTime.getHours() * 60 + wakeTime.getMinutes();
+
+        let difference = wakeMinutes - bedtimeMinutes;
+
+        if (difference <=0){
+            difference += 24 * 60
+        }
+        
+        const hours = Math.floor(difference / 60)
+        const minutes = difference % 60;
+
+        if (minutes === 0){
+            return `${hours}h`;
+        }
+
+        return `${hours}h ${minutes}m`;
     }
     return (
         <SafeAreaView style={styles.container}>
@@ -66,8 +95,8 @@ export default function SleepSetupScreen(){
                     </TouchableOpacity>
 
                     <View style={styles.card}>
-                        <Text style={styles.label}>Sleep Goal</Text>
-                        <Text style={styles.time}>8 Hours</Text>
+                        <Text style={styles.label}>Your sleep window</Text>
+                        <Text style={styles.time}>{calculateSleepWindow()}</Text>
                     </View>
 
 
@@ -117,7 +146,10 @@ export default function SleepSetupScreen(){
                         />
                     )}
                 </View>
-                <TouchableOpacity style={styles.button}>
+                <TouchableOpacity 
+                    style={styles.button}
+                    onPress={() => navigation.navigate("GoalSetup")}
+                >
                     <Text style={styles.buttonText}>Continue</Text>
                 </TouchableOpacity>
 
